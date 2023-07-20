@@ -32,7 +32,7 @@ def val(img_path):
 
     img_path = img_path
     image = load_img(img_path, color_mode='grayscale', target_size=(28, 28))
-    input_arr = 1.0 - (np.expand_dims(img_to_array(image), axis=0)).astype('float32') / 255.0
+    input_arr = (np.expand_dims(img_to_array(image), axis=0)).astype('float32') / 255.0
     predictions = loaded_model.predict(input_arr)
     predicted_class = np.argmax(predictions)
 
@@ -40,7 +40,7 @@ def val(img_path):
 
 
 def main():
-    train_model()
+    #train_model()
     val("test_images/3.png")
     val("test_images/1.png")
     val("test_images/5.png")
