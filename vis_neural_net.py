@@ -41,12 +41,12 @@ def val(img_path):
 
 def main():
     train_model()
-    val("C:/Users/Zenov/Documents/3.png")
-    val("C:/Users/Zenov/Documents/1.png")
-    val("C:/Users/Zenov/Documents/5.png")
-    val("C:/Users/Zenov/Documents/7.png")
-    val("C:/Users/Zenov/Documents/8.png")
-    val("C:/Users/Zenov/Documents/9.png")
+    val("test_images/3.png")
+    val("test_images/1.png")
+    val("test_images/5.png")
+    val("test_images/7.png")
+    val("test_images/8.png")
+    val("test_images/9.png")
 
 
 if __name__ == '__main__':
