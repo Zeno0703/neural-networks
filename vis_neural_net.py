@@ -7,6 +7,9 @@ from keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 import os
 import pathlib
+import visualkeras
+from PIL import ImageFont
+from collections import defaultdict
 
 
 def train_model():
@@ -20,9 +23,9 @@ def train_model():
 
     model = models.Sequential()
 
-    model.add(layers.Flatten(input_shape=(28, 28)))
-    model.add(layers.Dense(256, activation='relu'))
-    model.add(layers.Dense(10, activation='softmax'))
+    model.add(layers.Flatten(input_shape=(28, 28), name='Flatten'))
+    model.add(layers.Dense(256, activation='relu', name='Dense'))
+    model.add(layers.Dense(10, activation='softmax', name='Output'))
 
     model.compile(optimizer=keras.optimizers.Adam(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -31,21 +34,32 @@ def train_model():
     model.save('model.keras')
 
 
-def val(img_path):
-    loaded_model = tf.keras.models.load_model('model.keras')
-
+def val(img_path, model):
     image = load_img(img_path, color_mode='grayscale', target_size=(28, 28))
     input_arr = img_to_array(image).astype('float32') / 255.0
     input_arr = np.reshape(input_arr, (1, 28, 28))
-    predictions = loaded_model.predict(input_arr)
+    predictions = model.predict(input_arr)
     predicted_class = np.argmax(predictions)
 
     print(f"Predicted class: {predicted_class}")
 
 
+def visualize(model):
+    print(model.summary())
+
+    font = ImageFont.truetype("arial.ttf", 16)
+    color_map = defaultdict(dict)
+    color_map[layers.Flatten]['fill'] = 'lightcoral'
+    color_map[layers.Dense]['fill'] = 'powderblue'
+
+    visualkeras.layered_view(model, legend=True, font=font, scale_xy=1, one_dim_orientation='y', color_map=color_map).show()
+
+
 def main():
+    loaded_model = tf.keras.models.load_model('model.keras')
     for file in os.listdir(os.path.join(pathlib.Path(__file__).parent, 'test_images')):
-        val(os.path.join(pathlib.Path(__file__).parent, 'test_images', file))
+        val(os.path.join(pathlib.Path(__file__).parent, 'test_images', file), loaded_model)
+    visualize(loaded_model)
 
 
 if __name__ == '__main__':
